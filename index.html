@@ -8,18 +8,40 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <h1>Guess the Country!</h1>
-  
-  <div id="js-map" class="map"></div>
+  <header>
+    <h1>🌍 Guess the Country or Ocean Game 🌍</h1>
+  </header>
+
+  <div class="game-container">
+    <div id="js-map" class="map"></div>
+
+    <div id="score-display" class="score-table">
+      <table>
+        <tr>
+          <th>Total Score</th>
+        </tr>
+        <tr>
+          <td id="score-value">0</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 
   <div class="guess-container">
-    <input type="text" id="country-input" placeholder="Which country is this?" />
+    <input type="text" id="country-input" placeholder="Guess the location (country/ocean)..." />
     <button id="submit-btn">Submit Guess</button>
   </div>
 
   <div id="result-popup" class="popup hidden"></div>
+  <div id="info-popup" class="popup hidden"></div> <!-- Bilgilendirici mesaj için yeni popup -->
+
+  <button id="restart-btn" class="hidden">Play Again</button>
+
+  <footer>
+    <p>Powered by OpenStreetMap & OpenLayers</p>
+  </footer>
 
   <script src="./libs/v6.4.0-dist/ol.js"></script>
-  <script src="./main.js"></script> 
+  <script src="./main.js"></script>
 </body>
 </html>

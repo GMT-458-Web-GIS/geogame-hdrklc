@@ -7,50 +7,142 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #4c669f, #3b5998, #192f6a);
+  color: #f4f4f4;
   height: 100vh;
-  width: 100vw;
+  overflow: hidden;
+}
+
+header, footer {
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 h1 {
-  margin: 10px 0;
+  font-size: 2em;
+  color: #f9d342;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+footer p {
+  font-size: 0.9em;
+  color: #ddd;
+  margin: 0;
+}
+
+.game-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 80vh;
 }
 
 .map {
-  height: 70vh;
-  width: 80vw;
-  margin-top: 10px;
+  height: 80vh;
+  width: 65vw;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Marker'ın görünümünü iyileştirecek katman */
-.ol-marker {
-  background-color: red;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  border: 2px solid white;
+.score-table {
+  font-size: 1.5em;
+  margin-left: 10px;
+  height: 80vh;
+  width: 20vw;
+  background-color: #333;
+  color: #f9d342;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Tahmin giriş alanı */
+.score-table table {
+  width: 100%;
+}
+
+.score-table th, .score-table td {
+  padding: 15px;
+  border: 1px solid #555;
+}
+
+#score-value {
+  font-size: 2em;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
 .guess-container {
   margin-top: 10px;
   display: flex;
   gap: 10px;
 }
 
-/* Popup bildirimi için stil */
-.popup {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 15px;
-  background-color: #333;
+.guess-container input {
+  padding: 8px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  width: 250px;
+}
+
+.guess-container button {
+  padding: 8px 15px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #28a745;
   color: white;
-  border-radius: 5px;
-  font-size: 18px;
-  transition: opacity 0.5s;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.guess-container button:hover {
+  background-color: #218838;
+}
+
+.popup {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  border-radius: 10px;
+  font-size: 1.5em;
+  text-align: center;
+  z-index: 1000;
+}
+
+#info-popup {
+  top: 60%; /* Bilgilendirici popup daha aşağıda gösterilecek */
 }
 
 .hidden {
-  opacity: 0;
-  pointer-events: none;
+  display: none;
+}
+
+#restart-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #FF6347;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+#restart-btn:hover {
+  background-color: #FF4500;
 }
