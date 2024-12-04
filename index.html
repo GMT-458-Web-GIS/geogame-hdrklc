@@ -3,43 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoGuessr Lite</title>
+    <title>GeoGuessr Game</title>
     <link rel="stylesheet" href="./libs/v6.4.0-dist/ol.css">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <header>
-    <h1>🌍 Guess the Country or Ocean Game 🌍</h1>
-  </header>
+  <div class="container">
+    <header>
+      <h1>🌍 GeoGuessr Game: Drag and Drop to Find the Country 🌍</h1>
+    </header>
 
-  <div class="game-container">
-    <div id="js-map" class="map"></div>
+    <div class="main-content">
+      <!-- Harita Bölümü -->
+      <div id="js-map" class="map"></div>
 
-    <div id="score-display" class="score-table">
-      <table>
-        <tr>
-          <th>Total Score</th>
-        </tr>
-        <tr>
-          <td id="score-value">0</td>
-        </tr>
-      </table>
+      <!-- Skor Tablosu -->
+      <div id="score-display" class="score-table">
+        <h2>Scoreboard</h2>
+        <table>
+          <tr>
+            <th>Total Score</th>
+          </tr>
+          <tr>
+            <td id="score-value">0</td>
+          </tr>
+          <tr>
+            <th>Current Target</th>
+          </tr>
+          <tr>
+            <td id="country-name">Loading...</td>
+          </tr>
+        </table>
+        <button id="submit-btn">Submit</button>
+      </div>
     </div>
+
+    <footer>
+      <p>Powered by OpenStreetMap & OpenLayers</p>
+    </footer>
   </div>
-
-  <div class="guess-container">
-    <input type="text" id="country-input" placeholder="Guess the location (country/ocean)..." />
-    <button id="submit-btn">Submit Guess</button>
-  </div>
-
-  <div id="result-popup" class="popup hidden"></div>
-  <div id="info-popup" class="popup hidden"></div> <!-- Bilgilendirici mesaj için yeni popup -->
-
-  <button id="restart-btn" class="hidden">Play Again</button>
-
-  <footer>
-    <p>Powered by OpenStreetMap & OpenLayers</p>
-  </footer>
 
   <script src="./libs/v6.4.0-dist/ol.js"></script>
   <script src="./main.js"></script>

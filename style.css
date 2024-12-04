@@ -1,148 +1,143 @@
-/* Temel ayarlar */
+/* Genel Ayarlar */
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #4c669f, #3b5998, #192f6a);
+  background: linear-gradient(to right, #1e3c72, #2a5298);
   color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  overflow: hidden;
 }
 
-header, footer {
-  width: 100%;
+/* Ana Konteyner */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Başlık */
+header {
   text-align: center;
-  padding: 5px 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #444;
+  color: #f4f4f4;
+  padding: 15px 0;
 }
 
 h1 {
   font-size: 2em;
-  color: #f9d342;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
   margin: 0;
 }
 
-footer p {
-  font-size: 0.9em;
-  color: #ddd;
-  margin: 0;
-}
-
-.game-container {
+/* Ana İçerik */
+.main-content {
+  flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 80vh;
 }
 
+/* Harita */
 .map {
-  height: 80vh;
-  width: 65vw;
-  border-radius: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  flex: 3;
+  height: 100%;
+  border-right: 2px solid #ddd;
 }
 
+/* Skor Tablosu */
 .score-table {
-  font-size: 1.5em;
-  margin-left: 10px;
-  height: 80vh;
-  width: 20vw;
+  flex: 1;
   background-color: #333;
   color: #f9d342;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  align-items: center;
+  padding: 20px;
+}
+
+.score-table h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
 }
 
 .score-table table {
   width: 100%;
+  text-align: center;
+  border-collapse: collapse;
 }
 
 .score-table th, .score-table td {
-  padding: 15px;
+  padding: 10px;
   border: 1px solid #555;
 }
 
-#score-value {
-  font-size: 2em;
-  font-weight: bold;
-  color: #4CAF50;
-}
-
-.guess-container {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.guess-container input {
-  padding: 8px;
+button {
+  margin-top: 20px;
+  padding: 10px 15px;
   font-size: 1em;
-  border-radius: 8px;
-  border: 2px solid #ddd;
-  width: 250px;
-}
-
-.guess-container button {
-  padding: 8px 15px;
-  font-size: 1em;
-  cursor: pointer;
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.guess-container button:hover {
+button:hover {
   background-color: #218838;
 }
 
+/* Pop-Up Tasarımı */
 .popup {
   position: fixed;
-  top: 40%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 15px;
-  background-color: rgba(0, 0, 0, 0.9);
+  padding: 15px 20px;
+  font-size: 1.2em;
+  font-weight: bold;
   color: white;
-  border-radius: 10px;
-  font-size: 1.5em;
-  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   z-index: 1000;
+  animation: fadeIn 0.5s ease-out;
 }
 
-#info-popup {
-  top: 60%; /* Bilgilendirici popup daha aşağıda gösterilecek */
+.popup.success {
+  background-color: #28a745; /* Yeşil renk (Doğru) */
 }
 
-.hidden {
-  display: none;
+.popup.error {
+  background-color: #dc3545; /* Kırmızı renk (Yanlış) */
 }
 
-#restart-btn {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 1.1em;
-  cursor: pointer;
-  background-color: #FF6347;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+.popup.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
-#restart-btn:hover {
-  background-color: #FF4500;
+/* Alt Bilgi */
+footer {
+  text-align: center;
+  background-color: #222;
+  color: #ddd;
+  font-size: 0.9em;
+  padding: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }

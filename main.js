@@ -1,51 +1,50 @@
 window.onload = init;
 
 let map;
-let markerLayer;
-let randomCoords;
+let draggableMarker; // Hareket ettirilebilir marker
+let targetCountry; // Hedef ülke
 let score = 0;
-let startTime;
-let timeLimit = 5; // 5 saniyelik zaman sınırı
-let userProfile = { score: 0, locations: [], achievements: [] };
 
 function init() {
-  setRandomCoordsOnLocation();
-  updateScore(0);
+  setupMap();
+  generateTargetCountry();
+  addDraggableMarker();
 
-  if (!map) {
-    map = new ol.Map({
-      view: new ol.View({
-        center: ol.proj.fromLonLat([0, 0]),
-        zoom: 2,
-        maxZoom: 6,
-        minZoom: 2,
-      }),
-      layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM(), // OpenStreetMap kaynağı kullanılıyor
-        }),
-      ],
-      target: "js-map",
-      controls: ol.control.defaults().extend([
-        new ol.control.Zoom(),
-      ]),
-    });
-  }
-
-  addMarker();
-  startTimer();
-
-  document.getElementById("submit-btn").addEventListener("click", handleGuess);
-  document.getElementById("restart-btn").addEventListener("click", restartGame);
+  document.getElementById("submit-btn").addEventListener("click", checkMarkerPosition);
 }
 
-function addMarker() {
-  if (markerLayer) {
-    map.removeLayer(markerLayer);
-  }
+function setupMap() {
+  map = new ol.Map({
+    view: new ol.View({
+      center: ol.proj.fromLonLat([0, 0]),
+      zoom: 2,
+      maxZoom: 6,
+      minZoom: 2,
+    }),
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM(),
+      }),
+    ],
+    target: "js-map",
+    controls: ol.control.defaults().extend([new ol.control.Zoom()]),
+  });
+}
 
+function generateTargetCountry() {
+  const countries = [
+    "Turkey", "Russia", "China", "Brazil", "India", "United States",
+    "Australia", "Canada", "Germany", "France", "Japan", "South Korea",
+    "Italy", "Mexico", "Argentina", "Egypt", "South Africa", "United Kingdom",
+    "Spain", "Saudi Arabia"
+  ];
+  targetCountry = countries[Math.floor(Math.random() * countries.length)];
+  document.getElementById("country-name").textContent = targetCountry;
+}
+
+function addDraggableMarker() {
   const marker = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat(randomCoords)),
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([0, 0])),
   });
 
   const markerStyle = new ol.style.Style({
@@ -63,122 +62,90 @@ function addMarker() {
     features: [marker],
   });
 
-  markerLayer = new ol.layer.Vector({
+  draggableMarker = new ol.layer.Vector({
     source: vectorSource,
   });
 
-  map.addLayer(markerLayer);
+  map.addLayer(draggableMarker);
+
+  const interaction = new ol.interaction.Modify({
+    source: vectorSource,
+  });
+
+  map.addInteraction(interaction);
 }
 
-function startTimer() {
-  startTime = new Date().getTime();
-}
-
-async function handleGuess() {
-  const userGuess = document.getElementById("country-input").value.trim().toLowerCase();
-  const resultElement = document.getElementById("result-popup");
-
-  const currentTime = new Date().getTime();
-  const timeTaken = (currentTime - startTime) / 1000; // Saniye cinsinden süre
+async function checkMarkerPosition() {
+  const coords = draggableMarker.getSource().getFeatures()[0].getGeometry().getCoordinates();
+  const [lon, lat] = ol.proj.toLonLat(coords);
 
   try {
-    const location = await getLocationName(randomCoords);
-    const correctGuess = userGuess === location.toLowerCase();
-    let points = correctGuess && timeTaken <= timeLimit ? 2 : 1;
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`
+    );
+    const data = await response.json();
+    const location = data.address?.country;
 
-    if (correctGuess) {
-      score += points;
-      userProfile.score += points;
-      userProfile.locations.push(location);
-      showPopup(`Correct! 🎉 You earned ${points} point(s). The location is ${location}.`);
+    if (location === targetCountry) {
+      score += 10; // Puan ekle
+      updateScore();
+      showPopup(`🎉 Correct! You found ${targetCountry}.`, "success");
+      resetMarker(); // Marker'ı yeniden konumlandır
+      generateTargetCountry(); // Yeni hedef belirle
     } else {
-      showPopup(`Wrong! ❌ The correct answer is ${location}.`);
-    }
-
-    updateScore(score);
-    await showInfoPopup(location); // Bilgilendirici mesajı göster
-  } catch (error) {
-    showPopup('Error: Could not fetch location data.');
-    console.error(error);
-  }
-}
-
-async function showInfoPopup(location) {
-  try {
-    const response = await fetch(`https://tr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(location)}`);
-    if (response.ok) {
-      const data = await response.json();
-      const infoElement = document.getElementById("info-popup");
-      // 150 karakterden uzun ise kes ve sonuna "..." ekle
-      const infoText = data.extract.length > 150 ? data.extract.substring(0, 150) + "..." : data.extract;
-      infoElement.textContent = infoText || "Bu konum hakkında ek bilgi yok.";
-      infoElement.classList.remove('hidden');
-    } else {
-      const infoElement = document.getElementById("info-popup");
-      infoElement.textContent = "Bu konum hakkında ek bilgi yok.";
-      infoElement.classList.remove('hidden');
+      showPopup(`❌ Wrong! The correct country was ${targetCountry}.`, "error");
+      restartGame(); // Oyunu bitir
     }
   } catch (error) {
-    const infoElement = document.getElementById("info-popup");
-    infoElement.textContent = "Bu konum hakkında ek bilgi yok.";
-    infoElement.classList.remove('hidden');
+    console.error("Error checking position:", error);
+    showPopup("❌ Error! Could not check the position.", "error");
   }
 }
 
-function setRandomCoordsOnLocation() {
-  randomCoords = getRandomCoords();
-  getLocationName(randomCoords)
-    .then(location => {
-      if (!location) {
-        setRandomCoordsOnLocation();
-      }
-    })
-    .catch(() => setRandomCoordsOnLocation());
+function updateScore() {
+  document.getElementById("score-value").textContent = score;
 }
 
-function getRandomCoords() {
-  const lat = Math.random() * 140 - 70;
-  const lon = Math.random() * 360 - 180;
-  return [lon, lat];
-}
+function resetMarker() {
+  const vectorSource = draggableMarker.getSource();
+  vectorSource.clear();
 
-async function getLocationName(coords) {
-  const [lon, lat] = coords;
-  const response = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=tr`
-  );
-  if (!response.ok) {
-    throw new Error('Failed to fetch location data');
-  }
-  const data = await response.json();
-  
-  if (data.address) {
-    if (data.address.ocean) return data.address.ocean;
-    if (data.address.water) return data.address.water;
-    if (data.address.country) return data.address.country;
-  }
-  return null;
-}
+  const marker = new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([0, 0])),
+  });
 
-function showPopup(message) {
-  const resultElement = document.getElementById("result-popup");
-  resultElement.textContent = message;
-  resultElement.classList.remove('hidden');
-  document.getElementById("submit-btn").disabled = true;
-  document.getElementById("restart-btn").classList.remove('hidden');
-}
+  const markerStyle = new ol.style.Style({
+    image: new ol.style.Icon({
+      color: '#ff0000',
+      crossOrigin: 'anonymous',
+      src: 'data:image/svg+xml;charset=utf-8,' +
+           encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="10" fill="red" stroke="white" stroke-width="2"/></svg>'),
+    }),
+  });
 
-function updateScore(newScore) {
-  document.getElementById("score-value").textContent = newScore;
+  marker.setStyle(markerStyle);
+  vectorSource.addFeature(marker);
 }
 
 function restartGame() {
-  document.getElementById("submit-btn").disabled = false;
-  document.getElementById("restart-btn").classList.add('hidden');
-  document.getElementById("result-popup").classList.add('hidden');
-  document.getElementById("info-popup").classList.add('hidden'); // Bilgilendirici popup gizlenir
-  document.getElementById("country-input").value = "";
-  setRandomCoordsOnLocation();
-  addMarker();
-  startTimer();
+  showPopup("Game Over! Click OK to restart.", "error");
+  score = 0;
+  updateScore();
+  resetMarker();
+  generateTargetCountry();
+}
+
+function showPopup(message, type) {
+  const popup = document.createElement("div");
+  popup.classList.add("popup", type);
+  popup.textContent = message;
+
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.classList.add("fade-out");
+    popup.addEventListener("transitionend", () => {
+      popup.remove();
+    });
+  }, 3000);
 }
