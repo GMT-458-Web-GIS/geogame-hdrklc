@@ -37,3 +37,43 @@
  -------------------------------------------------------
 |                  Restart Button                      |
  -------------------------------------------------------
+
+
+# GeoGuessr Game: Drag and Drop to Find the Country 🌍
+
+GeoGuessr Game is a fun and educational game where you try to locate the correct country on the map by dragging and dropping a marker. Test your geographical knowledge while having a great time!
+
+---
+
+## 📖 How to Play?
+
+### 1. Learn the Target Country
+The name of the target country is displayed in the **"Current Target"** section of the scoreboard. Your goal is to locate this country.
+
+### 2. Drag the Marker
+Drag the red marker, which is located in the center of the map, using your mouse and move it to the borders of the target country.
+
+### 3. Submit Your Guess
+After placing the marker on the target country, click the **"Submit"** button to make your guess.
+
+### 4. See the Result
+- **Correct Guess**: A "Correct!" notification will appear in a green box, and you will earn 10 points.
+- **Wrong Guess**: A "Wrong!" notification will appear in a red box with the correct country name. The game will reset.
+
+### 5. Collect Your Score
+- Earn **10 points** for each correct guess.
+- If you make a wrong guess, your score will reset to zero.
+
+---
+
+## 🛠️ Technologies Used
+
+- **HTML/CSS**: For page layout and styling.
+- **JavaScript**: For game logic and map controls.
+- **OpenLayers**: For map functionality and draggable marker.
+
+---
+
+## 🎮 Have Fun!
+
+Enjoy the game and improve your geographical knowledge while competing for the highest score! 🎮 🌍
