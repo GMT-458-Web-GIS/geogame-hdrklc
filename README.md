@@ -2,6 +2,8 @@
 
 # Geogame website
 https://gmt-458-web-gis.github.io/geogame-hdrklc/
+# ChatGpt Link
+https://chatgpt.com/share/6756fc00-0ab0-800b-8260-d3f53d2a1267
 # Geo-Guess Game
 
 ## Design of the Geo-Game 
@@ -78,5 +80,47 @@ After placing the marker on the target country, click the **"Submit"** button to
 ---
 
 ## 🎮 Have Fun!
+
+## Event Handlers
+
+### 1. Submit Button Click Event
+- **Purpose**: Triggers when the **Submit** button is clicked.
+- **Functionality**: Checks if the draggable marker is correctly placed:
+  - Displays success or error notifications.
+  - Updates the score and generates a new target for correct guesses.
+  - Resets the game for incorrect guesses.
+
+---
+
+### 2. Draggable Marker Modification Event
+- **Purpose**: Allows the user to move the marker on the map.
+- **Functionality**: Dynamically updates the marker's position as the user drags it.
+
+---
+
+### 3. Game Initialization (Window Load Event)
+- **Purpose**: Sets up the game when the page loads.
+- **Functionality**: Initializes the map, sets a target country, and places a draggable marker.
+
+## Use of Closures
+
+Closures were utilized in the project to maintain access to variables and functions across different scopes. For example:
+
+- The `checkMarkerPosition` function accesses the `targetCountry` variable defined in the parent scope to compare the draggable marker's position with the target country.
+- The closure ensures that the game logic remains modular, allowing functions like `generateTargetCountry` and `resetMarker` to interact seamlessly without global variables.
+
+This approach helped improve code readability and maintainability by keeping the logic encapsulated.
+
+## Interaction with the DOM
+
+The project interacts with the DOM to provide dynamic updates and enhance user experience:
+
+- **Updating Elements**: The scoreboard (`#score-value`) and the target country (`#country-name`) are updated dynamically using JavaScript.
+- **Event Listeners**: Buttons like **Submit** are connected to event handlers for user interaction.
+- **Pop-Up Notifications**: Notifications are created and styled dynamically as DOM elements to display feedback (e.g., "Correct!" or "Wrong!").
+- **Marker Interaction**: The draggable marker's position is continuously monitored and linked to user actions on the map.
+
+These interactions ensure the game responds in real-time to user input.
+
 
 Enjoy the game and improve your geographical knowledge while competing for the highest score! 🎮 🌍
